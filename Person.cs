@@ -11,10 +11,10 @@ namespace fifth_lab
     {
         static List<Month> months = new List<Month>();
 
-        static void start(string[] args)
+        public static void start()
         {
             Bitmap image1 = new Bitmap(@"C:\Users\kurku\Pictures\screens\2020-04-04_133703.png", true);
-
+            
             // menu();
         }
 
@@ -48,7 +48,7 @@ namespace fifth_lab
             // }
         // }
 
-        public static void write_user_data()
+        public void write_user_data()
         {
             while (true)
             {
@@ -80,7 +80,7 @@ namespace fifth_lab
             }
         }
 
-        public static void write_template()
+        public void write_template()
         {
             String[] titlesMonths = {
                 "Январь", "Февраль", "Март", "Апрель", 
@@ -97,19 +97,19 @@ namespace fifth_lab
             }
         }
         
-        public static void write_to_xml()
+        public void write_to_xml()
         {
             XmlDocument xDoc = new XmlDocument();
             
             // загружаем файл который будем записывать, если какая-то ошибка, то создаем новый
-            try { xDoc.Load("C:\\Users\\kurku\\Documents\\C#Projects\\test\\test\\test\\Person.xml"); }
+            try { xDoc.Load(@"C:\Users\kurku\Documents\C#Projects\fifth_lab_C#\fifth_lab\testFile.xml"); }
             catch (Exception e)
-            { File.WriteAllText("C:\\Users\\kurku\\Documents\\C#Projects\\test\\test\\test\\Person.xml",
+            { File.WriteAllText(@"C:\Users\kurku\Documents\C#Projects\fifth_lab_C#\fifth_lab\testFile.xml",
                     "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<root>\n\n</root>"); }
             
             XmlElement root = xDoc.DocumentElement;
             // чистим весь файл пере записью
-            root.RemoveAll();
+            root?.RemoveAll();
             foreach (Month i in months)
             {
                 XmlElement month = xDoc.CreateElement("Месяц");
@@ -129,7 +129,7 @@ namespace fifth_lab
             }
             
             xDoc.AppendChild(root);
-            xDoc.Save("C:\\Users\\kurku\\Documents\\C#Projects\\test\\test\\test\\Person.xml");
+            xDoc.Save(@"C:\Users\kurku\Documents\C#Projects\fifth_lab_C#\fifth_lab\testFile.xml");
         }
 
         public static void read_from_xml()
