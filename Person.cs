@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Xml;
 
@@ -48,36 +49,19 @@ namespace fifth_lab
             // }
         // }
 
-        public void write_user_data()
+        public bool write_user_data(String titleMonth, String pre_amountDays)
         {
-            while (true)
-            {
-                Console.WriteLine("\n\nВведите месяц: ");
-                String titleMonth;
-                // проверка на ввод нормального месяца (не пустая строка)
-                try
-                {
-                    titleMonth = Console.ReadLine();
-                    if (string.IsNullOrEmpty(titleMonth)) continue;
-                }
-                catch (Exception e)    // если юзер ввел пустую строку
-                { continue; }
-                Console.WriteLine("Введите количество дней в месяце:");
-                int amountDays = 0;
-                while (amountDays <= 0)
-                {
-                    try { amountDays = Convert.ToInt32(Console.ReadLine());}
-                    catch (Exception e) { continue; }
-                }
-                
-                // добавляем по отдельности каждый день в массив дней и пускаем его в класс с месяцами
-                int[] amountDaysInMonth = new int[amountDays];
-                for (int j = 0; j < amountDays; j++) amountDaysInMonth[j] = j + 1;
-                months.Add(new Month(titleMonth, amountDaysInMonth));
-                
-                Console.WriteLine("Хотите ввести ещё месяца?(1 - Да)");
-                if (Console.ReadKey().KeyChar != 49) return;
-            }
+            // проверка на ввод нормального месяца (не пустая строка)
+            if (string.IsNullOrEmpty(titleMonth)) return false;
+            int amountDays;
+            try { amountDays = Convert.ToInt32(pre_amountDays);}
+            catch (Exception e) { return false; }
+
+            // добавляем по отдельности каждый день в массив дней и пускаем его в класс с месяцами
+            int[] amountDaysInMonth = new int[amountDays];
+            for (int j = 0; j < amountDays; j++) amountDaysInMonth[j] = j + 1;
+            months.Add(new Month(titleMonth, amountDaysInMonth));
+            return true;
         }
 
         public void write_template()
@@ -118,11 +102,16 @@ namespace fifth_lab
                 month.AppendChild(titleMonth);
                 foreach (var one_day in i.EveryDayMonth)
                 {
-                    
                     XmlElement day = xDoc.CreateElement("День");
                     XmlAttribute attr = xDoc.CreateAttribute("day");
                     attr.AppendChild(xDoc.CreateTextNode(one_day.ToString()));
+                    XmlAttribute secondAttr = xDoc.CreateAttribute("codeDay");
+                    secondAttr.AppendChild(xDoc.CreateTextNode(i.SortList[one_day - 1].codeDay.ToString()));
+                    XmlAttribute thirdAttr = xDoc.CreateAttribute("averageTemperature");
+                    thirdAttr.AppendChild(xDoc.CreateTextNode(i.SortList[one_day - 1].averageTemperature.ToString(CultureInfo.InvariantCulture)));
                     day.Attributes.Append(attr);
+                    day.Attributes.Append(secondAttr);
+                    day.Attributes.Append(thirdAttr);
                     month.AppendChild(day);
                 }
                 root.AppendChild(month);
@@ -158,7 +147,7 @@ namespace fifth_lab
         }
 
         public SortedList<int, InfoAboutEveryDayInMonth> SortList = new SortedList<int, InfoAboutEveryDayInMonth>();
-        
+
         
 
         public Month(string titleMonth, int[] everyDayMonth)
@@ -169,8 +158,7 @@ namespace fifth_lab
             // заполняем класс для условия случайными числами (чтоб пользователь не задолбался)
             for (int i = 0; i < everyDayMonth.Length; i++)
             {
-                int codeDay = rnd.Next(0, 100);
-                try { SortList.Add(codeDay, new InfoAboutEveryDayInMonth(codeDay, rnd.Next(-30, 50))); }
+                try { SortList.Add(i, new InfoAboutEveryDayInMonth(i, rnd.Next(-30, 50))); }
                 catch (Exception e) { continue; }
             }
             

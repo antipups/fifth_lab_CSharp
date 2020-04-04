@@ -22,6 +22,7 @@ namespace fifth_lab
             textBox1.Visible = false;
             textBox2.Visible = false;
             button5.Visible = false;
+            label3.Visible = false;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -32,6 +33,7 @@ namespace fifth_lab
             textBox1.Visible = true;
             textBox2.Visible = true;
             button5.Visible = true;
+            label3.Visible = true;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -41,7 +43,6 @@ namespace fifth_lab
 
         private void button3_Click(object sender, EventArgs e)
         {
-            // throw new System.NotImplementedException();
             program.write_to_xml();
         }
 
@@ -63,6 +64,20 @@ namespace fifth_lab
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             // throw new System.NotImplementedException();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (program.write_user_data(textBox1.Text, textBox2.Text))
+            {
+                label3.Text = @"Запись добавлена";
+                label3.ForeColor = Color.Green;
+            }
+            else
+            {
+                label3.Text = @"Ошибка при вводе";
+                label3.ForeColor = Color.Red;
+            }
         }
     }
 }
