@@ -49,18 +49,18 @@ namespace fifth_lab
             // }
         // }
 
-        public bool write_user_data(String titleMonth, String pre_amountDays)
+        public bool write_user_data(String titleMonth, String preAmountDays, String pathToImage)
         {
             // проверка на ввод нормального месяца (не пустая строка)
             if (string.IsNullOrEmpty(titleMonth)) return false;
             int amountDays;
-            try { amountDays = Convert.ToInt32(pre_amountDays);}
+            try { amountDays = Convert.ToInt32(preAmountDays);}
             catch (Exception e) { return false; }
-
+            if (!File.Exists(pathToImage)) return false;
             // добавляем по отдельности каждый день в массив дней и пускаем его в класс с месяцами
             int[] amountDaysInMonth = new int[amountDays];
             for (int j = 0; j < amountDays; j++) amountDaysInMonth[j] = j + 1;
-            months.Add(new Month(titleMonth, amountDaysInMonth));
+            months.Add(new Month(titleMonth, amountDaysInMonth, pathToImage));
             return true;
         }
 
@@ -77,7 +77,7 @@ namespace fifth_lab
             {
                 int[] amountDaysInMonth = new int[arrayDays[i]];
                 for (int j = 0; j < arrayDays[i]; j++) amountDaysInMonth[j] = j + 1;
-                months.Add(new Month(titlesMonths[i], amountDaysInMonth));
+                months.Add(new Month(titlesMonths[i], amountDaysInMonth, @"C:\Users\kurku\Pictures\For5Lab\2.jpg"));
             }
         }
         
@@ -100,6 +100,24 @@ namespace fifth_lab
                 XmlElement titleMonth = xDoc.CreateElement(name: "Название");
                 titleMonth.AppendChild(xDoc.CreateTextNode(i.TitleMonth));
                 month.AppendChild(titleMonth);
+                XmlElement picture = xDoc.CreateElement("Картинка");
+                
+                // конвертируем изображения в цифры, чтоб сериализовать норм
+                byte[] kek;
+                using (var stream = new MemoryStream())
+                {
+                    i.image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    kek = stream.ToArray();
+                }
+                String str = "";
+                foreach (var VARIABLE in kek)
+                {
+                    str += VARIABLE.ToString();
+                }
+
+                picture.AppendChild(xDoc.CreateTextNode(str));
+                month.AppendChild(picture);
+
                 foreach (var one_day in i.EveryDayMonth)
                 {
                     XmlElement day = xDoc.CreateElement("День");
@@ -148,9 +166,9 @@ namespace fifth_lab
 
         public SortedList<int, InfoAboutEveryDayInMonth> SortList = new SortedList<int, InfoAboutEveryDayInMonth>();
 
-        
+        public Bitmap image;
 
-        public Month(string titleMonth, int[] everyDayMonth)
+        public Month(string titleMonth, int[] everyDayMonth, String pathToImage)
         {
             this.TitleMonth = titleMonth;
             this.EveryDayMonth = everyDayMonth;
@@ -161,7 +179,7 @@ namespace fifth_lab
                 try { SortList.Add(i, new InfoAboutEveryDayInMonth(i, rnd.Next(-30, 50))); }
                 catch (Exception e) { continue; }
             }
-            
+            image = new Bitmap(pathToImage);
         }
     }
     

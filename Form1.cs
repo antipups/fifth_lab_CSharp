@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.IO.StreamReader;
 
 namespace fifth_lab
 {
@@ -23,6 +25,7 @@ namespace fifth_lab
             textBox2.Visible = false;
             button5.Visible = false;
             label3.Visible = false;
+            button6.Visible = false;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -34,6 +37,7 @@ namespace fifth_lab
             textBox2.Visible = true;
             button5.Visible = true;
             label3.Visible = true;
+            button6.Visible = true;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -48,12 +52,12 @@ namespace fifth_lab
 
         private void label1_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            // throw new System.NotImplementedException();
         }
 
         private void label2_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            // throw new System.NotImplementedException();
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -68,7 +72,7 @@ namespace fifth_lab
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (program.write_user_data(textBox1.Text, textBox2.Text))
+            if (program.write_user_data(textBox1.Text, textBox2.Text, openFileDialog1.InitialDirectory + openFileDialog1.FileName))
             {
                 label3.Text = @"Запись добавлена";
                 label3.ForeColor = Color.Green;
@@ -78,6 +82,11 @@ namespace fifth_lab
                 label3.Text = @"Ошибка при вводе";
                 label3.ForeColor = Color.Red;
             }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.ShowDialog();
         }
     }
 }

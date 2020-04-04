@@ -39,6 +39,8 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.button6 = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // button1
@@ -122,7 +124,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(12, 201);
+            this.button5.Location = new System.Drawing.Point(12, 258);
             this.button5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(153, 55);
@@ -133,17 +135,33 @@
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(171, 201);
+            this.label3.Location = new System.Drawing.Point(171, 258);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(120, 83);
+            this.label3.Size = new System.Drawing.Size(120, 82);
             this.label3.TabIndex = 9;
             this.label3.Text = "Здесь будет уведомление о добавленной записи";
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(12, 199);
+            this.button6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(153, 55);
+            this.button6.TabIndex = 10;
+            this.button6.Text = "Выберите картинку";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 562);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -173,5 +191,7 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
