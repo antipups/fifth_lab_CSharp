@@ -12,43 +12,6 @@ namespace fifth_lab
     {
         static List<Month> months = new List<Month>();
 
-        public static void start()
-        {
-            Bitmap image1 = new Bitmap(@"C:\Users\kurku\Pictures\screens\2020-04-04_133703.png", true);
-            
-            // menu();
-        }
-
-        // static void menu()
-        // {
-            // while (true)
-            // {
-                // Console.WriteLine("\n\n1 - Использовать шаблонные данные;\n" +
-                                  // "2 - Ввести данные;\n" +
-                                  // "3 - Сериализовать данные (поместить в XML);\n" +
-                                  // "4 - Десериализовать данные (считать в консоль);\n" +
-                                  // "ESC - выход;\n" +
-                                  // "Выш выбор:\n");
-                // switch ((int)Console.ReadKey().KeyChar)
-                // {
-                    // case '1':
-                        // write_template();
-                        // break;
-                    // case '2':
-                        // write_user_data();
-                        // break;
-                    // case '3':
-                        // write_to_xml();
-                        // break;
-                    // case '4':
-                        // read_from_xml();
-                        // break;
-                    // case 27:
-                        // return;
-                // }   
-            // }
-        // }
-
         public bool write_user_data(String titleMonth, String preAmountDays, String pathToImage)
         {
             // проверка на ввод нормального месяца (не пустая строка)
@@ -89,7 +52,7 @@ namespace fifth_lab
             try { xDoc.Load(@"C:\Users\kurku\Documents\C#Projects\fifth_lab_C#\fifth_lab\testFile.xml"); }
             catch (Exception e)
             { File.WriteAllText(@"C:\Users\kurku\Documents\C#Projects\fifth_lab_C#\fifth_lab\testFile.xml",
-                    "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<root>\n\n</root>"); }
+                    "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<MonthCollection>\n\n</MonthCollection>"); }
             
             XmlElement root = xDoc.DocumentElement;
             // чистим весь файл пере записью
