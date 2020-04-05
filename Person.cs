@@ -106,14 +106,12 @@ namespace fifth_lab
                 byte[] kek;
                 using (var stream = new MemoryStream())
                 {
-                    i.image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    Bitmap tempImg = new Bitmap(i.image);
+                    tempImg.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
                     kek = stream.ToArray();
                 }
                 String str = "";
-                foreach (var VARIABLE in kek)
-                {
-                    str += VARIABLE.ToString() + ",";
-                }
+                foreach (var VARIABLE in kek) { str += VARIABLE.ToString() + ","; }
 
                 str = str.Substring(0, str.Length - 1);
                 picture.AppendChild(xDoc.CreateTextNode(str));
@@ -140,7 +138,7 @@ namespace fifth_lab
             xDoc.Save(@"C:\Users\kurku\Documents\C#Projects\fifth_lab_C#\fifth_lab\testFile.xml");
         }
 
-        public Bitmap read_from_xml()
+        public String read_from_xml()
         {
             XmlDocument xDoc = new XmlDocument();
             xDoc.Load(@"C:\Users\kurku\Documents\C#Projects\fifth_lab_C#\fifth_lab\testFile.xml");
@@ -155,17 +153,19 @@ namespace fifth_lab
                 String titleMonth;
                 Bitmap image;
                 mark = 0;
-                
+                int[] evedyDayMonth;
+                SortedList<int, Month.InfoAboutEveryDayInMonth> SortList = new SortedList<int, Month.InfoAboutEveryDayInMonth>();
                 // обходим все дочерние узлы элемента user
                 foreach(XmlNode childnode in xnode.ChildNodes)    // в Месяце 
                 {
-                    
-                    if (childnode.Name == "Название" && mark != 1)
+                    // str += childnode.Name;                    
+                    if (childnode.Name.Equals("Название") && mark == 0)
                     {
                         month.TitleMonth = childnode.InnerText;
                         mark = 1;
+                        continue;
                     }
-                    if (childnode.Name == "Картинка" && mark == 1)
+                    if (childnode.Name.Equals("Картинка") && mark == 1)
                     {
                         String[] stringbit = childnode.InnerText.Split(',');
                         byte[] kek = new byte[stringbit.Length];
@@ -178,21 +178,32 @@ namespace fifth_lab
                             // image = new Bitmap(stream);
                             month.image = new Bitmap(stream);
                         }
-                        mark = 0;
+                        mark = 2;
+                        continue;
                     }
-
-                    if (childnode.Name == "День")
+                    if (childnode.Name.Equals("День"))
                     {
                         mark += 1;
-                        String day = childnode.Attributes.GetNamedItem("day").Value;
                         String codeDay = childnode.Attributes.GetNamedItem("codeDay").Value;
                         String averageTemperature = childnode.Attributes.GetNamedItem("averageTemperature").Value;
+                        SortList.Add(Int32.Parse(codeDay), new Month.InfoAboutEveryDayInMonth(Int32.Parse(codeDay), Int32.Parse(averageTemperature)));
                         // day.Value        СМОТРИ СЮДА
+                        continue;
                     }
                 }
-            }
+                evedyDayMonth = new int[mark - 2];
+                for (int i = 0; i < mark - 2; i++) { evedyDayMonth[i] = i + 1; }    // заполняем массив каждый день числом каждого дня
 
-            return new Bitmap("sex");
+                month.EveryDayMonth = evedyDayMonth;
+                month.SortList = SortList;
+                months.Add(month);
+            }
+            return "Массив десериализован, последняя картинка которая в нём была находится правее";
+        }
+
+        public Bitmap get_image()
+        {
+            return months[months.Count - 1].image;
         }
     }
 

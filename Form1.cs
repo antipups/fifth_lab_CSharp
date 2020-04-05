@@ -64,7 +64,9 @@ namespace fifth_lab
         {
             // throw new System.NotImplementedException();
             // label3.Text = program.read_from_xml();
-            pictureBox1.Image = program.read_from_xml();
+            label3.Text = program.read_from_xml();
+            label3.Visible = true;
+            pictureBox1.Image = program.get_image();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -89,6 +91,8 @@ namespace fifth_lab
         private void button6_Click(object sender, EventArgs e)
         {
             openFileDialog1.ShowDialog();
+            pictureBox1.Image = new Bitmap(openFileDialog1.InitialDirectory + openFileDialog1.FileName);
+            pictureBox1.Text = @"Добавленная картинка";
         }
     }
 }
