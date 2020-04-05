@@ -63,8 +63,8 @@ namespace fifth_lab
         private void button4_Click(object sender, EventArgs e)
         {
             // throw new System.NotImplementedException();
-            label3.Text = program.read_from_xml();
-            
+            // label3.Text = program.read_from_xml();
+            pictureBox1.Image = program.read_from_xml();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)

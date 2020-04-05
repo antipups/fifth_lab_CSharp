@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Xml;
-using System.Xml.Serialization;
 
 
 namespace fifth_lab
@@ -95,7 +94,6 @@ namespace fifth_lab
             XmlElement root = xDoc.DocumentElement;
             // чистим весь файл пере записью
             root?.RemoveAll();
-            XmlElement months = xDoc.CreateElement("Месяца");
             foreach (Month i in months)
             {
                 XmlElement month = xDoc.CreateElement("Месяц");
@@ -108,15 +106,16 @@ namespace fifth_lab
                 byte[] kek;
                 using (var stream = new MemoryStream())
                 {
-                    // i.image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    i.image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
                     kek = stream.ToArray();
                 }
                 String str = "";
                 foreach (var VARIABLE in kek)
                 {
-                    str += VARIABLE.ToString();
+                    str += VARIABLE.ToString() + ",";
                 }
 
+                str = str.Substring(0, str.Length - 1);
                 picture.AppendChild(xDoc.CreateTextNode(str));
                 month.AppendChild(picture);
 
@@ -125,58 +124,90 @@ namespace fifth_lab
                     XmlElement day = xDoc.CreateElement("День");
                     XmlAttribute attr = xDoc.CreateAttribute("day");
                     attr.AppendChild(xDoc.CreateTextNode(one_day.ToString()));
-                    // XmlAttribute secondAttr = xDoc.CreateAttribute("codeDay");
-                    // secondAttr.AppendChild(xDoc.CreateTextNode(i.SortList[one_day - 1].codeDay.ToString()));
-                    // XmlAttribute thirdAttr = xDoc.CreateAttribute("averageTemperature");
-                    // thirdAttr.AppendChild(xDoc.CreateTextNode(i.SortList[one_day - 1].averageTemperature.ToString(CultureInfo.InvariantCulture)));
+                    XmlAttribute secondAttr = xDoc.CreateAttribute("codeDay");
+                    secondAttr.AppendChild(xDoc.CreateTextNode(i.SortList[one_day - 1].codeDay.ToString()));
+                    XmlAttribute thirdAttr = xDoc.CreateAttribute("averageTemperature");
+                    thirdAttr.AppendChild(xDoc.CreateTextNode(i.SortList[one_day - 1].averageTemperature.ToString(CultureInfo.InvariantCulture)));
                     day.Attributes.Append(attr);
-                    // day.Attributes.Append(secondAttr);
-                    // day.Attributes.Append(thirdAttr);
+                    day.Attributes.Append(secondAttr);
+                    day.Attributes.Append(thirdAttr);
                     month.AppendChild(day);
                 }
-                months.AppendChild(month);
+                root.AppendChild(month);
             }
-            root.AppendChild(months);
+            
             xDoc.AppendChild(root);
             xDoc.Save(@"C:\Users\kurku\Documents\C#Projects\fifth_lab_C#\fifth_lab\testFile.xml");
         }
 
-        public String read_from_xml()
+        public Bitmap read_from_xml()
         {
-            MonthCollection months = null;
-            string path = @"C:\Users\kurku\Documents\C#Projects\fifth_lab_C#\fifth_lab\testFile.xml";
-            
-            XmlSerializer serializer = new XmlSerializer(typeof(MonthCollection));
-            
-            StreamReader reader = new StreamReader(path);
-            months = (MonthCollection)serializer.Deserialize(reader);
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.Load(@"C:\Users\kurku\Documents\C#Projects\fifth_lab_C#\fifth_lab\testFile.xml");
+            // получим корневой элемент
+            XmlElement xRoot = xDoc.DocumentElement;
             String str = "";
-            foreach (var month in months.Month)
+            months.Clear();
+            foreach(XmlNode xnode in xRoot)
             {
-                str += month.SortList.Keys;
+                int mark;
+                Month month = new Month();
+                String titleMonth;
+                Bitmap image;
+                mark = 0;
+                
+                // обходим все дочерние узлы элемента user
+                foreach(XmlNode childnode in xnode.ChildNodes)    // в Месяце 
+                {
+                    
+                    if (childnode.Name == "Название" && mark != 1)
+                    {
+                        month.TitleMonth = childnode.InnerText;
+                        mark = 1;
+                    }
+                    if (childnode.Name == "Картинка" && mark == 1)
+                    {
+                        String[] stringbit = childnode.InnerText.Split(',');
+                        byte[] kek = new byte[stringbit.Length];
+                        for (int i = 0; i < stringbit.Length; i++)
+                        {
+                            kek[i] = Byte.Parse(stringbit[i]);
+                        }
+                        using (var stream = new MemoryStream(kek))
+                        {
+                            // image = new Bitmap(stream);
+                            month.image = new Bitmap(stream);
+                        }
+                        mark = 0;
+                    }
+
+                    if (childnode.Name == "День")
+                    {
+                        mark += 1;
+                        String day = childnode.Attributes.GetNamedItem("day").Value;
+                        String codeDay = childnode.Attributes.GetNamedItem("codeDay").Value;
+                        String averageTemperature = childnode.Attributes.GetNamedItem("averageTemperature").Value;
+                        // day.Value        СМОТРИ СЮДА
+                    }
+                }
             }
-            reader.Close();
-            return str;
+
+            return new Bitmap("sex");
         }
     }
-
 
 
     [Serializable]
     public class Month
     {
-        [XmlElement(ElementName = "Название")] public string TitleMonth { get; set; }
-
+        public string TitleMonth { get; set; }
         public int[] EveryDayMonth;
 
         public class InfoAboutEveryDayInMonth
         {
-            [XmlAttribute(AttributeName = "codeDay")]
             public int codeDay;
-        
-            [XmlAttribute(AttributeName = "averageTemperature")]
             public double averageTemperature;
-        
+
             public InfoAboutEveryDayInMonth(int codeDay, double averageTemperature)
             {
                 this.codeDay = codeDay;
@@ -184,43 +215,29 @@ namespace fifth_lab
             }
         }
 
-    [XmlArray("Months")]
-    public SortedList<int, String> SortList = new SortedList<int, String>();
+        public SortedList<int, InfoAboutEveryDayInMonth> SortList = new SortedList<int, InfoAboutEveryDayInMonth>();
 
-        // [XmlElement(ElementName = "Картинка")]
-        // public Bitmap image;
-        
-        Month(){}
+        public Bitmap image;
+
+
         public Month(string titleMonth, int[] everyDayMonth, String pathToImage)
         {
             this.TitleMonth = titleMonth;
             this.EveryDayMonth = everyDayMonth;
             Random rnd = new Random();
             // заполняем класс для условия случайными числами (чтоб пользователь не задолбался)
-            // for (int i = 0; i < everyDayMonth.Length; i++)
-            // {
-                // try { SortList.Add(i, new InfoAboutEveryDayInMonth(i, rnd.Next(-30, 50))); }
-                // catch (Exception e) { continue; }
-            // }
-            // image = new Bitmap(pathToImage);
+            for (int i = 0; i < everyDayMonth.Length; i++)
+            {
+                try { SortList.Add(i, new InfoAboutEveryDayInMonth(i, rnd.Next(-30, 50))); }
+                catch (Exception e) { continue; }
+            }
+            if (pathToImage.Length < 1000) image = new Bitmap(pathToImage);
+        }
+
+        public Month()
+        {
+            // throw new NotImplementedException();
         }
     }
     
-    [XmlInclude(typeof(Month))]
-    public class MyDay
-    {
-        
-    }
-    
-    
-    
-    [Serializable]
-    [XmlRoot("MonthCollection")]
-    public class MonthCollection
-    {
-        [XmlArray("Месяца")]
-        [XmlArrayItem("Месяц", typeof(Month))]
-        [XmlArrayItem("День", typeof(MyDay))]
-        public Month[] Month { get; set; }
-    }
 }
