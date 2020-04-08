@@ -8,8 +8,10 @@ using System.Xml;
 
 namespace fifth_lab
 {
+    
     class Person
     {
+        public String path_to_xml;
         static List<Month> months = new List<Month>();
 
         public bool write_user_data(String titleMonth, String preAmountDays, String pathToImage)
@@ -49,9 +51,9 @@ namespace fifth_lab
             XmlDocument xDoc = new XmlDocument();
             
             // загружаем файл который будем записывать, если какая-то ошибка, то создаем новый
-            try { xDoc.Load(@"C:\Users\kurku\Documents\C#Projects\fifth_lab_C#\fifth_lab\testFile.xml"); }
+            try { xDoc.Load(path_to_xml); }
             catch (Exception e)
-            { File.WriteAllText(@"C:\Users\kurku\Documents\C#Projects\fifth_lab_C#\fifth_lab\testFile.xml",
+            { File.WriteAllText(path_to_xml,
                     "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<MonthCollection>\n\n</MonthCollection>"); }
             
             XmlElement root = xDoc.DocumentElement;
@@ -98,13 +100,13 @@ namespace fifth_lab
             }
             
             xDoc.AppendChild(root);
-            xDoc.Save(@"C:\Users\kurku\Documents\C#Projects\fifth_lab_C#\fifth_lab\testFile.xml");
+            xDoc.Save(path_to_xml);
         }
 
         public String read_from_xml()
         {
             XmlDocument xDoc = new XmlDocument();
-            xDoc.Load(@"C:\Users\kurku\Documents\C#Projects\fifth_lab_C#\fifth_lab\testFile.xml");
+            xDoc.Load(path_to_xml);
             // получим корневой элемент
             XmlElement xRoot = xDoc.DocumentElement;
             String str = "";

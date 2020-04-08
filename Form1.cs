@@ -26,6 +26,8 @@ namespace fifth_lab
             button5.Visible = false;
             label3.Visible = false;
             button6.Visible = false;
+            String currentDirectory = Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().IndexOf("bin", StringComparison.Ordinal));
+            program.path_to_xml = currentDirectory + "testFile.xml";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -90,7 +92,14 @@ namespace fifth_lab
 
         private void button6_Click(object sender, EventArgs e)
         {
-            openFileDialog1.ShowDialog();
+            openFileDialog1.InitialDirectory = Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().IndexOf("bin", StringComparison.Ordinal)) + "For5Lab";
+            while (true)
+            {
+                openFileDialog1.ShowDialog();
+                if (openFileDialog1.FileName.IndexOf(".png", StringComparison.Ordinal) > 0 || openFileDialog1.FileName.IndexOf(".jpg", StringComparison.Ordinal) > 0 || openFileDialog1.FileName.IndexOf(".jpeg", StringComparison.Ordinal) > 0)
+                    break;
+                    
+            }
             pictureBox1.Image = new Bitmap(openFileDialog1.InitialDirectory + openFileDialog1.FileName);
             pictureBox1.Text = @"Добавленная картинка";
         }
