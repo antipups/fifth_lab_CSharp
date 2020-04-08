@@ -45,6 +45,9 @@ namespace fifth_lab
         private void button2_Click(object sender, EventArgs e)
         {
             program.write_template();
+            label3.Visible = true;
+            label3.Text = @"Записаны ТОЛЬКО шаблонные данные.";
+            label3.ForeColor = Color.Green;
         }
 
         private void button3_Click(object sender, EventArgs e)
