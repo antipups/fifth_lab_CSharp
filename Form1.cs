@@ -78,7 +78,7 @@ namespace fifth_lab
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (program.write_user_data(textBox1.Text, textBox2.Text, openFileDialog1.InitialDirectory + openFileDialog1.FileName))
+            if (program.write_user_data(textBox1.Text, textBox2.Text,  openFileDialog1.FileName))
             {
                 label3.Text = @"Запись добавлена";
                 label3.ForeColor = Color.Green;

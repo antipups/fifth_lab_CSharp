@@ -31,6 +31,7 @@ namespace fifth_lab
 
         public void write_template()
         {
+            months.Clear();
             String[] titlesMonths = {
                 "Январь", "Февраль", "Март", "Апрель", 
                 "Май", "Июнь", "Июль", "Август", 
