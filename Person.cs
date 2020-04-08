@@ -38,11 +38,11 @@ namespace fifth_lab
             };
             int[] arrayDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
             // добавляем в массив все месяца с их днями
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 6; i++)
             {
                 int[] amountDaysInMonth = new int[arrayDays[i]];
                 for (int j = 0; j < arrayDays[i]; j++) amountDaysInMonth[j] = j + 1;
-                months.Add(new Month(titlesMonths[i], amountDaysInMonth, @"C:\Users\kurku\Pictures\For5Lab\2.jpg"));
+                months.Add(new Month(titlesMonths[i], amountDaysInMonth, Directory.GetCurrentDirectory().Substring(0, Directory.GetCurrentDirectory().IndexOf("bin", StringComparison.Ordinal)) + @"For5Lab\2.jpg"));
             }
         }
         

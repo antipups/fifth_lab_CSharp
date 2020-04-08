@@ -100,7 +100,7 @@ namespace fifth_lab
                     break;
                     
             }
-            pictureBox1.Image = new Bitmap(openFileDialog1.InitialDirectory + openFileDialog1.FileName);
+            pictureBox1.Image = new Bitmap(openFileDialog1.FileName);
             pictureBox1.Text = @"Добавленная картинка";
         }
     }
